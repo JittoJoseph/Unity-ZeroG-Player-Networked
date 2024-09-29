@@ -55,16 +55,11 @@ public class PlayerController : MonoBehaviour
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
-        // Calculate forward direction based on camera angle
-        Vector3 forward = Quaternion.Euler(verticalRotation, transform.eulerAngles.y, 0) * Vector3.forward;
 
-        // Calculate movement vector
+        Vector3 forward = Quaternion.Euler(verticalRotation, transform.eulerAngles.y, 0) * Vector3.forward;
         Vector3 movement = (transform.right * moveHorizontal + forward * moveVertical).normalized;
 
-        // Apply thrust to velocity
         velocity += movement * thrustForce * Time.deltaTime;
-
-        // Clamp velocity to max speed
         velocity = Vector3.ClampMagnitude(velocity, maxVelocity);
     }
 

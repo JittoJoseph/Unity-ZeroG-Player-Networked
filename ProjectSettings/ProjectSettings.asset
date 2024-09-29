@@ -807,7 +807,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Standalone: FUSION_WEAVER;FUSION2
+    Standalone: FUSION_WEAVER;FUSION2;EDGEGAP_PLUGIN_SERVERS;FISHNET;FISHNET_V4
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
