@@ -21,44 +21,55 @@ public class NetworkPlayer : NetworkBehaviour
     {
         base.OnStartClient();
         
-        if (!base.IsOwner)
+        if (base.IsOwner)
         {
+            Debug.Log($"Player {gameObject.name} is owned by the local client.");
+            SetupLocalPlayer();
+        }
+        else
+        {
+            Debug.Log($"Player {gameObject.name} is not owned by the local client.");
             DisableComponentsForNonOwner();
         }
     }
 
+    void SetupLocalPlayer()
+    {
+        playerCamera = GetComponentInChildren<Camera>();
+        if (playerCamera == null)
+        {
+            Debug.LogError($"Player camera not found for {gameObject.name}!");
+            return;
+        }
+        
+        playerCamera.gameObject.SetActive(true);
+        Debug.Log($"Camera activated for local player {gameObject.name}");
+
+        // Lock and hide the cursor only for the owner
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
     void DisableComponentsForNonOwner()
     {
-        // Disable the camera for non-owner players
-        if (playerCamera != null)
+        Camera nonOwnerCamera = GetComponentInChildren<Camera>();
+        if (nonOwnerCamera != null)
         {
-            playerCamera.gameObject.SetActive(false);
+            nonOwnerCamera.gameObject.SetActive(false);
+            Debug.Log($"Camera deactivated for non-owner player {gameObject.name}");
         }
 
-        // Disable the CharacterController for non-owner players
         if (controller != null)
         {
             controller.enabled = false;
         }
 
-        // Optionally, you might want to disable this script for non-owner players
         this.enabled = false;
     }
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        playerCamera = GetComponentInChildren<Camera>();
-
-        if (playerCamera == null)
-        {
-            Debug.LogError("Player camera not found!");
-            return;
-        }
-
-        // Lock and hide the cursor only for the owner
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
     void Update()
@@ -86,10 +97,8 @@ public class NetworkPlayer : NetworkBehaviour
     {
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
-
         Vector3 forward = Quaternion.Euler(verticalRotation, transform.eulerAngles.y, 0) * Vector3.forward;
         Vector3 movement = (transform.right * moveHorizontal + forward * moveVertical).normalized;
-
         velocity += movement * thrustForce * Time.deltaTime;
         velocity = Vector3.ClampMagnitude(velocity, maxVelocity);
     }
