@@ -1,5 +1,3 @@
-Here is a simple and concise README file for the Zero Gravity Player repository:
-
 **Zero Gravity Player**
 =======================
 
